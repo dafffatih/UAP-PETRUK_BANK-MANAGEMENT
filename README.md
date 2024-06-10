@@ -3,10 +3,9 @@
 Sistem Manajemen Bank menggunakan C++
 
 Anggota :
-
-1 Rofik Ramadani (2317051092)
+1. Rofik Ramadani (2317051092)
 2. Muhammad Akmal Fadhurohman (2357051018)
-3. Daffa Muhammad Al Fatih(2317051047
+3. Daffa Muhammad Al Fatih (2317051047)
 
 File ini mengandung isi sebagai berikut :
 
