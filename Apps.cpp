@@ -13,14 +13,15 @@ using namespace std;
 #define YELLOW  "\033[33m"
 
 
+// Struktur untuk menyimpan transaksi
 struct Transaction {
-    string type;     
-    string sender;   
-    string recipient; 
-    double amount;       
+    string type;      // "Transfer" atau "Top-up"
+    string sender;    // Nama pengirim (untuk top-up bisa dibiarkan kosong)
+    string recipient; // Nama penerima (untuk top-up adalah nama pengguna)
+    double amount;         // Jumlah transaksi
 };
 
-
+// Fungsi untuk melakukan merge sort pada histori transaksi
 void merge(vector<Transaction>& transactions, int left, int mid, int right) {
     int n1 = mid - left + 1;
     int n2 = right - mid;
@@ -184,6 +185,37 @@ public:
         cout << "======================================\n";
     }
 
+    void withdraw(string& username) {
+        double amount;
+        cout << "\nMasukkan jumlah yang akan ditarik: Rp";
+        cin >> amount;
+        if (amount > saldo[username]) {
+            cout << "Saldo Anda tidak mencukupi.\n";
+            return;
+        }
+
+        saldo[username] -= amount;
+        cout << "Penarikan berhasil. Saldo Anda sekarang: Rp" << saldo[username] << endl;
+
+        // Menyimpan transaksi penarikan ke histori
+        Transaction withdrawal;
+        withdrawal.type = "Penarikan";
+        withdrawal.sender = username;
+        withdrawal.recipient = "";
+        withdrawal.amount = amount;
+        transactionHistory[username].push_back(withdrawal);
+
+        printWithdrawalReceipt(username, amount);
+    }
+
+    void printWithdrawalReceipt(string username, double amount) {
+        cout << "\n========== STRUK PENARIKAN ==========\n";
+        cout << "Nama Pengguna: " << username << endl;
+        cout << "Jumlah yang ditarik: Rp" << amount << endl;
+        cout << "Terima kasih telah menggunakan layanan kami.\n";
+        cout << "======================================\n";
+    }
+
     void showTransactionHistory(string& username) {
         cout << "\n===== RIWAYAT TRANSAKSI =====\n";
         vector<Transaction> history = transactionHistory[username];
@@ -322,7 +354,6 @@ int main() {
 
     startScreen(tPtr); // Panggil fungsi startScreen di sini
 
-
     while (true) {
         clearScreen();
         printWelcomeMessage();
@@ -334,9 +365,11 @@ int main() {
 
         switch (choice) {
             case 1:
+                 clearScreen();
                 bankSystem.registerUser();
                 break;
             case 2:
+                   clearScreen();
                 if (bankSystem.loginUser(username)) {
                     while (true) {
                         clearScreen();
@@ -344,8 +377,9 @@ int main() {
                         cout << "1. Lihat saldo dan riwayat transaksi\n";
                         cout << "2. Transfer dana\n";
                         cout << "3. Top up\n";
-                        cout << "4. Lihat histori transaksi\n";
-                        cout << "5. Keluar\n";
+                        cout << "4. Penarikan dana\n";
+                        cout << "5. Lihat histori transaksi\n";
+                        cout << "6. Keluar\n";
                         cout << "Pilih opsi: ";
                         cin >> choice;
 
@@ -353,18 +387,26 @@ int main() {
 
                         switch (choice) {
                             case 1:
+                                 clearScreen();
                                 bankSystem.showAccount(username);
                                 break;
                             case 2:
+                                 clearScreen();
                                 bankSystem.transfer(username);
                                 break;
                             case 3:
+                                 clearScreen();
                                 bankSystem.topUp(username);
                                 break;
                             case 4:
-                                bankSystem.showTransactionHistory(username);
+                                 clearScreen();
+                                bankSystem.withdraw(username);
                                 break;
                             case 5:
+                                 clearScreen();
+                                bankSystem.showTransactionHistory(username);
+                                break;
+                            case 6:
                                 cout << "Terima kasih telah menggunakan sistem kami. Sampai jumpa lagi!\n";
                                 choice = -1;
                                 break;
@@ -382,6 +424,7 @@ int main() {
                 }
                 break;
             case 3:
+                 clearScreen();
                 endScreen(tPtr);
                 cout << "Terima kasih telah menggunakan sistem kami. Sampai jumpa lagi!\n";
                 return 0;
