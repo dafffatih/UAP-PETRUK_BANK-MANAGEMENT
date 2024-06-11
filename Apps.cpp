@@ -8,13 +8,15 @@
 using namespace std;
 
 
-// Struktur untuk menyimpan transaksi
 struct Transaction {
-    string type;      // "Transfer" atau "Top-up"
-    string sender;    // Nama pengirim (untuk top-up bisa dibiarkan kosong)
-    string recipient; // Nama penerima (untuk top-up adalah nama pengguna)
-    double amount;         // Jumlah transaksi
+    string type;             // "Transfer", "Top-up", atau "Penarikan"
+    string sender;           // Nama pengirim (untuk top-up dan penarikan bisa dibiarkan kosong)
+    string recipient;        // Nama penerima (untuk top-up adalah nama pengguna)
+    string senderAccount;    // Nomor rekening pengirim
+    string recipientAccount; // Nomor rekening penerima
+    double amount;           // Jumlah transaksi
 };
+
 
 // Fungsi untuk melakukan merge sort pada histori transaksi
 void merge(vector<Transaction>& transactions, int left, int mid, int right) {
@@ -70,12 +72,13 @@ void mergeSort(vector<Transaction>& transactions, int left, int right) {
 class BankSystem {
 private:
     unordered_map<string, string> users;
+    unordered_map<string, string> accountNumbers; // Deklarasi yang hilang
     unordered_map<string, double> saldo;
     unordered_map<string, vector<Transaction>> transactionHistory;
 
 public:
     void registerUser() {
-        string username, password;
+        string username, password, accountNumber;
 
         cout << "\nMasukkan nama pengguna: ";
         cin >> username;
@@ -87,25 +90,37 @@ public:
         cout << "Masukkan kata sandi: ";
         cin >> password;
 
+        cout << "Masukkan nomor rekening: ";
+        cin >> accountNumber;
+
         users[username] = password;
+        accountNumbers[username] = accountNumber;
         saldo[username] = 0.0;
         cout << "Registrasi berhasil. Silakan login.\n";
+        cout << "Tekan Enter untuk melanjutkan...";
+        cin.ignore();
+        cin.get();
     }
 
     bool loginUser(string& username) {
-        string password;
+        string password, accountNumber;
 
         cout << "\nMasukkan nama pengguna: ";
         cin >> username;
         cout << "Masukkan kata sandi: ";
         cin >> password;
+        cout << "Masukkan nomor rekening: ";
+        cin >> accountNumber;
 
-        if (users.find(username) != users.end() && users[username] == password) {
+        if (users.find(username) != users.end() && users[username] == password && accountNumbers[username] == accountNumber) {
             cout << "Login berhasil. Selamat datang, " << username << "!\n";
             return true;
         } else {
-            cout << "Login gagal. Nama pengguna atau kata sandi salah.\n";
+            cout << "Login gagal. Nama pengguna, kata sandi, atau nomor rekening salah.\n";
             return false;
+            cout << "Tekan Enter untuk melanjutkan...";
+        cin.ignore(); // Membersihkan input buffer
+        cin.get();    // Menunggu pengguna menekan Enter sebelum melanjutkan
         }
     }
 
@@ -114,7 +129,7 @@ public:
     }
 
     void transfer(string& username) {
-        string recipient;
+        string recipient, recipientAccount;
         double amount;
         char confirm;
 
@@ -122,6 +137,13 @@ public:
         cin >> recipient;
         if (saldo.find(recipient) == saldo.end()) {
             cout << "Penerima tidak ditemukan.\n";
+            return;
+        }
+
+        cout << "Masukkan nomor rekening penerima: ";
+        cin >> recipientAccount;
+        if (accountNumbers[recipient] != recipientAccount) {
+            cout << "Nomor rekening penerima tidak cocok.\n";
             return;
         }
 
@@ -145,11 +167,13 @@ public:
             transaksi.type = "Transfer";
             transaksi.sender = username;
             transaksi.recipient = recipient;
+            transaksi.senderAccount = accountNumbers[username];
+            transaksi.recipientAccount = recipientAccount;
             transaksi.amount = amount;
             transactionHistory[username].push_back(transaksi);
             transactionHistory[recipient].push_back(transaksi);
 
-            printReceipt(username, recipient, amount);
+            printReceipt(username, recipient, accountNumbers[username], recipientAccount, amount);
         } else {
             cout << "Transfer dibatalkan.\n";
         }
@@ -167,14 +191,16 @@ public:
         topup.type = "Top-up";
         topup.sender = "";
         topup.recipient = username;
+        topup.senderAccount = "";
+        topup.recipientAccount = accountNumbers[username];
         topup.amount = amount;
         transactionHistory[username].push_back(topup);
     }
 
-    void printReceipt(string sender, string recipient, double amount) {
+    void printReceipt(string sender, string recipient, string senderAccount, string recipientAccount, double amount) {
         cout << "\n========== STRUK PEMBAYARAN ==========\n";
-        cout << "Pengirim: " << sender << endl;
-        cout << "Penerima: " << recipient << endl;
+        cout << "Pengirim: " << sender << " (" << senderAccount << ")" << endl;
+        cout << "Penerima: " << recipient << " (" << recipientAccount << ")" << endl;
         cout << "Jumlah yang ditransfer: Rp" << amount << endl;
         cout << "Terima kasih telah menggunakan layanan kami.\n";
         cout << "======================================\n";
@@ -197,6 +223,8 @@ public:
         withdrawal.type = "Penarikan";
         withdrawal.sender = username;
         withdrawal.recipient = "";
+        withdrawal.senderAccount = accountNumbers[username];
+        withdrawal.recipientAccount = "";
         withdrawal.amount = amount;
         transactionHistory[username].push_back(withdrawal);
 
@@ -205,7 +233,7 @@ public:
 
     void printWithdrawalReceipt(string username, double amount) {
         cout << "\n========== STRUK PENARIKAN ==========\n";
-        cout << "Nama Pengguna: " << username << endl;
+        cout << "Nama Pengguna: " << username << " (" << accountNumbers[username] << ")" << endl;
         cout << "Jumlah yang ditarik: Rp" << amount << endl;
         cout << "Terima kasih telah menggunakan layanan kami.\n";
         cout << "======================================\n";
@@ -215,19 +243,20 @@ public:
         cout << "\n===== RIWAYAT TRANSAKSI =====\n";
         vector<Transaction> history = transactionHistory[username];
         for (const auto& transaction : history) {
-            std::cout << "Jenis Transaksi: " << transaction.type << endl;
+            cout << "Jenis Transaksi: " << transaction.type << endl;
             if (transaction.type == "Transfer") {
-                cout << "Pengirim: " << transaction.sender << endl;
-                cout << "Penerima: " << transaction.recipient << endl;
+                cout << "Pengirim: " << transaction.sender << " (" << transaction.senderAccount << ")" << endl;
+                cout << "Penerima: " << transaction.recipient << " (" << transaction.recipientAccount << ")" << endl;
             } else if (transaction.type == "Top-up") {
-                cout << "Penerima: " << transaction.recipient << endl;
+                cout << "Penerima: " << transaction.recipient << " (" << transaction.recipientAccount << ")" << endl;
+            } else if (transaction.type == "Penarikan") {
+                cout << "Nama Pengguna: " << transaction.sender << " (" << transaction.senderAccount << ")" << endl;
             }
             cout << "Jumlah: Rp" << transaction.amount << endl;
             cout << "-----------------------------\n";
         }
     }
 };
-
 void clearScreen() {
     #if defined(_WIN32) || defined(_WIN64)
         system("cls");
@@ -348,6 +377,7 @@ int main() {
     tm *tPtr = localtime(&now);
 
     startScreen(tPtr); // Panggil fungsi startScreen di sini
+    clearScreen();
 
     while (true) {
         clearScreen();
@@ -360,12 +390,12 @@ int main() {
 
         switch (choice) {
             case 1:
-                 clearScreen();
+             clearScreen();
                 bankSystem.registerUser();
                 break;
             case 2:
-                   clearScreen();
-                if (bankSystem.loginUser(username)) {
+            clearScreen();
+            if (bankSystem.loginUser(username)) {
                     while (true) {
                         clearScreen();
                         cout << "Selamat datang, " << username << "!\n";
@@ -402,34 +432,28 @@ int main() {
                                 bankSystem.showTransactionHistory(username);
                                 break;
                             case 6:
-                                cout << "Terima kasih telah menggunakan sistem kami. Sampai jumpa lagi!\n";
-                                choice = -1;
-                                break;
+                                 clearScreen();
+                                cout << "Terima kasih telah menggunakan sistem kami.\n";
+                                return 0;
                             default:
-                                cout << "Pilihan tidak valid. Silakan coba lagi.\n";
+                                cout << "Opsi tidak valid. Silakan coba lagi.\n";
+                                break;
                         }
 
-                        if (choice == -1)
-                            break;
-
-                        cout << "Tekan enter untuk melanjutkan...";
+                        cout << "Tekan Enter untuk melanjutkan...";
                         cin.ignore();
                         cin.get();
                     }
                 }
                 break;
             case 3:
-                 clearScreen();
-                endScreen(tPtr);
-                cout << "Terima kasih telah menggunakan sistem kami. Sampai jumpa lagi!\n";
+             clearScreen();
+                endScreen(tPtr); 
                 return 0;
             default:
-                cout << "Pilihan tidak valid. Silakan coba lagi.\n";
+                cout << "Opsi tidak valid. Silakan coba lagi.\n";
+                break;
         }
-
-        cout << "Tekan enter untuk melanjutkan...";
-        cin.ignore();
-        cin.get();
     }
 
     return 0;
