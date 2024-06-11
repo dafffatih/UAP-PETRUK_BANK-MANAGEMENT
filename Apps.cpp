@@ -7,15 +7,20 @@
 #include <queue>
 using namespace std;
 
-// Struktur untuk menyimpan transaksi
+#define RESET   "\033[0m"
+#define RED     "\033[31m"
+#define GREEN   "\033[32m"
+#define YELLOW  "\033[33m"
+
+
 struct Transaction {
-    string type;      // "Transfer" atau "Top-up"
-    string sender;    // Nama pengirim (untuk top-up bisa dibiarkan kosong)
-    string recipient; // Nama penerima (untuk top-up adalah nama pengguna)
-    double amount;         // Jumlah transaksi
+    string type;     
+    string sender;   
+    string recipient; 
+    double amount;       
 };
 
-// Fungsi untuk melakukan merge sort pada histori transaksi
+
 void merge(vector<Transaction>& transactions, int left, int mid, int right) {
     int n1 = mid - left + 1;
     int n2 = right - mid;
@@ -204,10 +209,106 @@ void clearScreen() {
     #endif
 }
 
+void startScreen(tm* tPtr) {
+    clearScreen();
+    cout << "\n\n\n\t\t\t Date: " << (tPtr->tm_mday) << "/" << (tPtr->tm_mon + 1) << "/" << (tPtr->tm_year + 1900) << endl;
+    cout << "\t\t\t Time: " << (tPtr->tm_hour) << ":" << (tPtr->tm_min) << endl;
+
+  cout << "\t\t\t ##########################################################################################################################" << endl;
+	
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t      Selamat datang\t\t\t\t\t\t          #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t            di\t\t\t\t\t\t\t          #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t         Bank C++\t\t\t\t\t\t          #" << endl;
+
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\tDibuat oleh akmal,rofiq,daffa     #" << endl;
+	cout << "\t\t\t ##########################################################################################################################" << endl;
+	cout << "\t\t\t ",system("pause");
+}
+
+void endScreen(tm* tPtr)
+{
+	cout << "\n\n\n\t\t\t Date: " << (tPtr->tm_mday) << "/" << (tPtr->tm_mon) + 1 << "/" << (tPtr->tm_year) + 1900 << endl;
+	cout << "\t\t\t Time: " << (tPtr->tm_hour) << ":" << (tPtr->tm_min) << endl;
+
+	cout << "\t\t\t ##########################################################################################################################" << endl;
+	
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\tTerima kasih\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t     sudah menggunakan\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t   Bank C++\t\t\t\t\t\t          #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  #" << endl;
+	
+	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\tDibuat oleh akmal,rofiq,daffa     #" << endl;
+	cout << "\t\t\t ##########################################################################################################################" << endl;
+    cout << "\t\t\t Tekan Enter untuk melanjutkan...";
+    cin.ignore(); // Untuk membersihkan input buffer
+    cin.get(); // Untuk menunggu sampai pengguna menekan Enter
+}
+
 void printWelcomeMessage() {
     cout << "\n\n";
     cout << "=========================================\n";
-    cout << "      SELAMAT DATANG DI BANK BNI\n";
+    cout << "      SELAMAT DATANG DI BANK C++\n";
     cout << "=========================================\n";
     cout << "\n\n";
 }
@@ -216,6 +317,11 @@ int main() {
     BankSystem bankSystem;
     string username;
     int choice;
+    time_t now = time(0);
+    tm *tPtr = localtime(&now);
+
+    startScreen(tPtr); // Panggil fungsi startScreen di sini
+
 
     while (true) {
         clearScreen();
@@ -223,16 +329,14 @@ int main() {
         cout << "1. Registrasi\n";
         cout << "2. Login\n";
         cout << "3. Keluar\n";
-    	cout << "Pilih opsi: ";
+        cout << "Pilih opsi: ";
         cin >> choice;
 
         switch (choice) {
             case 1:
-                clearScreen();
                 bankSystem.registerUser();
                 break;
             case 2:
-                clearScreen();
                 if (bankSystem.loginUser(username)) {
                     while (true) {
                         clearScreen();
@@ -245,31 +349,27 @@ int main() {
                         cout << "Pilih opsi: ";
                         cin >> choice;
 
+                        clearScreen();
+
                         switch (choice) {
                             case 1:
-                                clearScreen();
                                 bankSystem.showAccount(username);
                                 break;
                             case 2:
-                                clearScreen();
                                 bankSystem.transfer(username);
                                 break;
                             case 3:
-                                clearScreen();
                                 bankSystem.topUp(username);
                                 break;
                             case 4:
-                                clearScreen();
                                 bankSystem.showTransactionHistory(username);
                                 break;
                             case 5:
-                                clearScreen();
-                                std::cout << "Terima kasih telah menggunakan sistem kami. Sampai jumpa lagi!\n";
+                                cout << "Terima kasih telah menggunakan sistem kami. Sampai jumpa lagi!\n";
                                 choice = -1;
                                 break;
                             default:
-                                clearScreen();
-                                std::cout << "Pilihan tidak valid. Silakan coba lagi.\n";
+                                cout << "Pilihan tidak valid. Silakan coba lagi.\n";
                         }
 
                         if (choice == -1)
@@ -282,16 +382,15 @@ int main() {
                 }
                 break;
             case 3:
-                clearScreen();
+                endScreen(tPtr);
                 cout << "Terima kasih telah menggunakan sistem kami. Sampai jumpa lagi!\n";
                 return 0;
             default:
-                clearScreen();
                 cout << "Pilihan tidak valid. Silakan coba lagi.\n";
         }
 
         cout << "Tekan enter untuk melanjutkan...";
-    	cin.ignore();
+        cin.ignore();
         cin.get();
     }
 
