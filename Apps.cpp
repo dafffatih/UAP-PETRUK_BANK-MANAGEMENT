@@ -9,16 +9,15 @@ using namespace std;
 
 
 struct Transaction {
-    string type;             // "Transfer", "Top-up", atau "Penarikan"
-    string sender;           // Nama pengirim (untuk top-up dan penarikan bisa dibiarkan kosong)
-    string recipient;        // Nama penerima (untuk top-up adalah nama pengguna)
-    string senderAccount;    // Nomor rekening pengirim
-    string recipientAccount; // Nomor rekening penerima
-    double amount;           // Jumlah transaksi
+    string type;
+    string sender;
+    string recipient;
+    string senderAccount;
+    string recipientAccount;
+    double amount;
 };
 
 
-// Fungsi untuk melakukan merge sort pada histori transaksi
 void merge(vector<Transaction>& transactions, int left, int mid, int right) {
     int n1 = mid - left + 1;
     int n2 = right - mid;
@@ -72,7 +71,7 @@ void mergeSort(vector<Transaction>& transactions, int left, int right) {
 class BankSystem {
 private:
     unordered_map<string, string> users;
-    unordered_map<string, string> accountNumbers; // Deklarasi yang hilang
+    unordered_map<string, string> accountNumbers;
     unordered_map<string, double> saldo;
     unordered_map<string, vector<Transaction>> transactionHistory;
 
@@ -119,8 +118,8 @@ public:
             cout << "Login gagal. Nama pengguna, kata sandi, atau nomor rekening salah.\n";
             return false;
             cout << "Tekan Enter untuk melanjutkan...";
-        cin.ignore(); // Membersihkan input buffer
-        cin.get();    // Menunggu pengguna menekan Enter sebelum melanjutkan
+        cin.ignore();
+        cin.get();
         }
     }
 
@@ -162,7 +161,6 @@ public:
             saldo[recipient] += amount;
             cout << "Transfer berhasil.\n";
 
-            // Menyimpan transaksi ke histori
             Transaction transaksi;
             transaksi.type = "Transfer";
             transaksi.sender = username;
@@ -185,8 +183,7 @@ public:
         cin >> amount;
         saldo[username] += amount;
         cout << "Top up berhasil. Saldo Anda sekarang: Rp" << saldo[username] << endl;
-
-        // Menyimpan transaksi top-up ke histori
+	    
         Transaction topup;
         topup.type = "Top-up";
         topup.sender = "";
@@ -218,7 +215,6 @@ public:
         saldo[username] -= amount;
         cout << "Penarikan berhasil. Saldo Anda sekarang: Rp" << saldo[username] << endl;
 
-        // Menyimpan transaksi penarikan ke histori
         Transaction withdrawal;
         withdrawal.type = "Penarikan";
         withdrawal.sender = username;
@@ -357,8 +353,8 @@ void endScreen(tm* tPtr)
 	cout << "\t\t\t #" << "\t\t\t\t\t\t\t\t\t\t\tDibuat oleh akmal,rofiq,daffa     #" << endl;
 	cout << "\t\t\t ##########################################################################################################################" << endl;
     cout << "\t\t\t Tekan Enter untuk melanjutkan...";
-    cin.ignore(); // Untuk membersihkan input buffer
-    cin.get(); // Untuk menunggu sampai pengguna menekan Enter
+    cin.ignore();
+    cin.get();
 }
 
 void printWelcomeMessage() {
@@ -376,7 +372,7 @@ int main() {
     time_t now = time(0);
     tm *tPtr = localtime(&now);
 
-    startScreen(tPtr); // Panggil fungsi startScreen di sini
+    startScreen(tPtr);
     clearScreen();
 
     while (true) {
