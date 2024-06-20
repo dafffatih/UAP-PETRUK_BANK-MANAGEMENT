@@ -1,5 +1,5 @@
 #include <iostream>
-#include <string>
+#include <cstring>
 #include <unordered_map>
 #include <vector>
 #include <list>
@@ -7,7 +7,6 @@
 #include <queue>
 #include <ctime>
 using namespace std;
-
 
 struct Transaction {
     string type;
@@ -18,20 +17,16 @@ struct Transaction {
     double amount;
 };
 
-
 void merge(vector<Transaction>& transactions, int left, int mid, int right) {
     int n1 = mid - left + 1;
     int n2 = right - mid;
 
-    vector<Transaction> L(n1);
-    vector<Transaction> R(n2);
+    vector<Transaction> L(n1), R(n2);
 
-    for (int i = 0; i < n1; i++) {
+    for (int i = 0; i < n1; i++)
         L[i] = transactions[left + i];
-    }
-    for (int i = 0; i < n2; i++) {
+    for (int i = 0; i < n2; i++)
         R[i] = transactions[mid + 1 + i];
-    }
 
     int i = 0, j = 0, k = left;
     while (i < n1 && j < n2) {
@@ -78,7 +73,7 @@ private:
 
 public:
     void registerUser() {
-        string username, password, accountNumber;
+        char username[50], password[50], accountNumber[50];
 
         cout << "\nMasukkan nama pengguna: ";
         cin >> username;
@@ -93,9 +88,9 @@ public:
         cout << "Masukkan nomor rekening: ";
         cin >> accountNumber;
 
-        users[username] = password;
-        accountNumbers[username] = accountNumber;
-        saldo[username] = 0.0;
+        users[string(username)] = string(password);
+        accountNumbers[string(username)] = string(accountNumber);
+        saldo[string(username)] = 0.0;
         cout << "Registrasi berhasil. Silakan login.\n";
         cout << "Tekan Enter untuk melanjutkan...";
         cin.ignore();
@@ -103,24 +98,25 @@ public:
     }
 
     bool loginUser(string& username) {
-        string password, accountNumber;
+        char inputUsername[50], password[50], accountNumber[50];
 
         cout << "\nMasukkan nama pengguna: ";
-        cin >> username;
+        cin >> inputUsername;
         cout << "Masukkan kata sandi: ";
         cin >> password;
         cout << "Masukkan nomor rekening: ";
         cin >> accountNumber;
 
-        if (users.find(username) != users.end() && users[username] == password && accountNumbers[username] == accountNumber) {
-            cout << "Login berhasil. Selamat datang, " << username << "!\n";
+        if (users.find(inputUsername) != users.end() && users[inputUsername] == password && accountNumbers[inputUsername] == accountNumber) {
+            cout << "Login berhasil. Selamat datang, " << inputUsername << "!\n";
+            username = string(inputUsername);
             return true;
         } else {
             cout << "Login gagal. Nama pengguna, kata sandi, atau nomor rekening salah.\n";
-            return false;
             cout << "Tekan Enter untuk melanjutkan...";
-        cin.ignore();
-        cin.get();
+            cin.ignore();
+            cin.get();
+            return false;
         }
     }
 
@@ -255,11 +251,7 @@ public:
     }
 };
 void clearScreen() {
-    #if defined(_WIN32) || defined(_WIN64)
-        system("cls");
-    #else
-        system("clear");
-    #endif
+    system("cls");
 }
 
 void startScreen(tm* tPtr) {
@@ -393,7 +385,8 @@ int main() {
             case 2:
             clearScreen();
             if (bankSystem.loginUser(username)) {
-                    while (true) {
+                    bool out = false;
+                    while (!out) {
                         clearScreen();
                         cout << "Selamat datang, " << username << "!\n";
                         cout << "1. Lihat saldo dan riwayat transaksi\n";
@@ -431,7 +424,8 @@ int main() {
                             case 6:
                                  clearScreen();
                                 cout << "Terima kasih telah menggunakan sistem kami.\n";
-                                return 0;
+                                out = true;
+                                break;
                             default:
                                 cout << "Opsi tidak valid. Silakan coba lagi.\n";
                                 break;
