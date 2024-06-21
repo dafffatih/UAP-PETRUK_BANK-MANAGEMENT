@@ -389,7 +389,7 @@ int main() {
                     while (!out) {
                         clearScreen();
                         cout << "Selamat datang, " << username << "!\n";
-                        cout << "1. Lihat saldo dan riwayat transaksi\n";
+                        cout << "1. Lihat saldo \n";
                         cout << "2. Transfer dana\n";
                         cout << "3. Top up\n";
                         cout << "4. Penarikan dana\n";
