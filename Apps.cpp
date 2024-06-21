@@ -6,7 +6,9 @@
 #include <stack>
 #include <queue>
 #include <ctime>
+#include <conio.h>
 using namespace std;
+
 
 struct Transaction {
     string type;
@@ -17,7 +19,8 @@ struct Transaction {
     double amount;
 };
 
-void merge(vector<Transaction>& transactions, int left, int mid, int right) {
+template <typename T>
+void merge(vector<Transaction>& transactions, T left, T mid, T right) {
     int n1 = mid - left + 1;
     int n2 = right - mid;
 
@@ -73,22 +76,44 @@ private:
 
 public:
     void registerUser() {
-        char username[50], password[50], accountNumber[50];
+        char username[50], accountNumber[50];
+        stack<char> password;
 
         cout << "\nMasukkan nama pengguna: ";
         cin >> username;
         if (users.find(username) != users.end()) {
             cout << "Nama pengguna sudah terdaftar. Silakan pilih nama pengguna lain.\n";
+            cout << "Tekan Enter untuk melanjutkan...";
+            cin.ignore();
+            cin.get();
             return;
         }
 
         cout << "Masukkan kata sandi: ";
-        cin >> password;
+        while (char ch = _getch()) {
+            if (ch == 13) { 
+                break;
+            } else if (ch == 8) { 
+                if (!password.empty()) {
+                    password.pop();
+                    cout << "\b \b"; 
+                }
+            } else {
+                password.push(ch);
+                cout << '*'; 
+            }
+        }
+        cout << endl;
 
         cout << "Masukkan nomor rekening: ";
         cin >> accountNumber;
+        string strpassword;
+        while (!password.empty()){
+            strpassword += password.top();
+            password.pop();
+        }
 
-        users[string(username)] = string(password);
+        users[string(username)] = strpassword;
         accountNumbers[string(username)] = string(accountNumber);
         saldo[string(username)] = 0.0;
         cout << "Registrasi berhasil. Silakan login.\n";
@@ -98,16 +123,34 @@ public:
     }
 
     bool loginUser(string& username) {
-        char inputUsername[50], password[50], accountNumber[50];
+        char inputUsername[50], accountNumber[50];
+        stack<char> password;
 
         cout << "\nMasukkan nama pengguna: ";
         cin >> inputUsername;
         cout << "Masukkan kata sandi: ";
-        cin >> password;
-        cout << "Masukkan nomor rekening: ";
+        while (char ch = _getch()) {
+            if (ch == 13) { 
+                break;
+            } else if (ch == 8) { 
+                if (!password.empty()) {
+                    password.pop();
+                    cout << "\b \b"; 
+                }
+            } else {
+                password.push(ch);
+                cout << '*'; 
+            }
+        }
+        cout << "\nMasukkan nomor rekening: ";
         cin >> accountNumber;
 
-        if (users.find(inputUsername) != users.end() && users[inputUsername] == password && accountNumbers[inputUsername] == accountNumber) {
+        string strpassword;
+        while (!password.empty()){
+            strpassword += password.top();
+            password.pop();
+        }
+        if (users.find(inputUsername) != users.end() && users[inputUsername] == strpassword && accountNumbers[inputUsername] == accountNumber) {
             cout << "Login berhasil. Selamat datang, " << inputUsername << "!\n";
             username = string(inputUsername);
             return true;
@@ -348,6 +391,7 @@ void endScreen(tm* tPtr)
     cout << "\t\t\t Tekan Enter untuk melanjutkan...";
     cin.ignore();
     cin.get();
+    clearScreen();
 }
 
 void printWelcomeMessage() {
@@ -389,7 +433,7 @@ int main() {
                     while (!out) {
                         clearScreen();
                         cout << "Selamat datang, " << username << "!\n";
-                        cout << "1. Lihat saldo \n";
+                        cout << "1. Lihat saldo dan riwayat transaksi\n";
                         cout << "2. Transfer dana\n";
                         cout << "3. Top up\n";
                         cout << "4. Penarikan dana\n";
